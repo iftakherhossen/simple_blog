@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div>
+    <div class="mb-5">
+        <nav class="nav nav-pills nav-fill">
+            <a class="nav-link fs-5 active" aria-current="page" href="{% url 'profile' %}">My post</a>
+            <a class="nav-link fs-5" href="{% url 'update_profile' %}">Update Profile</a>
+            <a class="nav-link fs-5" href="{% url 'change_password' %}">Change Password</a>
+            <a class="nav-link fs-5" href="{% url 'forgot_password' %}">Forgot Password</a>
+        </nav>
+    </div>
+    <div>
+        <h2 class="mb-4 fw-bold">My Posts</h2>
+        <div>
+            <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-3">
+                {% for post in data %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title fw-bold">
+                                <a href="{% url 'view_post' post.slug %}" class="text-decoration-none text-black">{{post.title}}</a>
+                            </h5>
+                            <p class="card-subtitle">By <a href="{% url 'author' post.author.username %}" class="text-black fw-semibold text-decoration-none">{{post.author.first_name|capfirst}} {{post.author.last_name|capfirst}}</a> • on {{post.created_at|time}}</p>
+                        </div>
+                        <div class="card-body">                    
+                            <p class="card-text mb-1">
+                                {{post.content|truncatewords:30}}
+                                <a href="{% url 'view_post' post.slug %}">See More</a>
+                            </p>
+                            <div class="d-flex items-center flex-wrap">
+                                {% for cat in categories.all %}
+                                    <span class="text-success me-2">#{{cat.name}}</span>
+                                {% endfor %}
+                            </div>            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

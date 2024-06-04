@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>    
+    <div class="row row-cols-1 row-cols-lg-2 gx-3 gy-4">
+        <div class="col-12 col-lg-3">
+            <div class="bg-body-secondary px-4 py-3">
+                <h5 class="fw-semibold mb-2" style="font-size: 24px;">Categories</h5>
+                <h6 class="mb-3" style="font-size: 19px;">Use Category to filter posts</h6>
+                <div class="d-block d-sm-flex flex-wrap d-lg-block column-gap-2 row-gap-1 column-gap-lg-0 row-gap-0">
+                    {% for category in categories %}
+                    <div class="form-check mb-2 d-flex align-items-center gap-2" style="cursor:pointer;">
+                        <input class="form-check-input" type="radio" name="category" id="{{category.id}}" value="{{category.id}}">
+                        <label class="form-check-label" for="{{category.id}}">
+                            <a href="{% url 'categorized_posts' category.slug %}" class="text-decoration-none text-black" style="font-size: 17px;">{{category}} ({{category.post_count}})</a>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9 px-3">
+            <div class="mb-3 px-2">
+                <h5 style="font-size: 23px;"><b>{{posts|length}}</b> Posts Found</h5>
+            </div>
+            <div class="row row-cols-1 g-3">
+                {% for post in posts %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title fw-bold">
+                                <a href="{% url 'view_post' post.slug %}" class="text-decoration-none text-black">{{post.title}}</a>
+                            </h5>
+                            <p class="card-subtitle">By <a href="{% url 'author' post.author.username %}" class="text-black fw-semibold text-decoration-none">{{post.author.first_name|capfirst}} {{post.author.last_name|capfirst}}</a> • on {{post.created_at|time}}</p>
+                        </div>
+                        <div class="card-body">                    
+                            <p class="card-text mb-1">
+                                {{post.content|truncatewords:80}}
+                                <a href="{% url 'view_post' post.slug %}">See More</a>
+                            </p>
+                            <div class="d-flex items-center flex-wrap">
+                                {% for category in post.category.all %}
+                                    <span class="text-success me-2">#{{category.name}}</span>
+                                {% endfor %}
+                            </div>            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
